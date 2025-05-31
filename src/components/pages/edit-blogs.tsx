@@ -20,9 +20,9 @@ interface BlogData {
 export default function EditBlogs() {
   const navigate = useNavigate();
 
-  const { blogId } = useParams<{ blogId: string }>(); 
+  const { blogId } = useParams<{ blogId: string }>();
   const [editorContent, setEditorContent] = useState("");
-  const [coverImage, setCoverImage] = useState<string | null>(""); 
+  const [coverImage, setCoverImage] = useState<string | null>("");
   const [metaData, setMetaData] = useState({
     title: "",
     description: "",
@@ -112,11 +112,11 @@ export default function EditBlogs() {
   };
 
   if (loading) {
-    return <div className="h-96 flex items-center justify-center"> <span className="animate-spin"><Loader2 size={16}/></span></div>; 
+    return <div className="h-96 flex items-center justify-center"> <span className="animate-spin"><Loader2 size={16} /></span></div>;
   }
 
   if (error) {
-    return <div className="h-96 flex items-center justify-center"> <span className="animate-spin"><ShieldAlert size={16}/></span> {error}</div>;; 
+    return <div className="h-96 flex items-center justify-center"> <span className="animate-spin"><ShieldAlert size={16} /></span> {error}</div>;;
   }
 
   return (
@@ -151,12 +151,33 @@ export default function EditBlogs() {
             <label htmlFor="imgUrl">Cover Image :</label>
             {
               coverImage ? (
-                <div className="flex-1 flex-col flex items-center justify-center rounded-xl border border-pre cursor-pointer  hover:bg-[#19001C] transition-colors duration-300">
-                  <img src={coverImage} alt="Cover Image" className="w-full h-full object-cover rounded-xl" />
+                <div
+                  className="relative flex-1 rounded-xl border border-pre cursor-pointer overflow-hidden hover:bg-[#19001C] transition-colors duration-300"
+                  onClick={() => {
+                    if (imgRef.current) {
+                      imgRef.current.click();
+                    }
+                  }}
+                >
+                  <img
+                    src={coverImage}
+                    alt="Cover Image"
+                    className="w-full h-full object-cover rounded-xl"
+                  />
+                  <div className="absolute bottom-2 right-2 bg-black bg-opacity-60 text-white text-xs px-2 py-1 rounded-md select-none pointer-events-none">
+                    Edit
+                  </div>
+                  <input
+                    ref={imgRef}
+                    type="file"
+                    id="imgUrl"
+                    className="hidden"
+                    onChange={handleImage}
+                  />
                 </div>
-
               ) : (
-                <div className="flex-1 flex-col flex items-center justify-center rounded-xl border border-pre cursor-pointer px-2 py-1  hover:dark:bg-[#19001C] transition-colors duration-300"
+                <div
+                  className="flex-1 flex-col flex items-center justify-center rounded-xl border border-pre cursor-pointer px-2 py-1  hover:dark:bg-[#19001C] transition-colors duration-300"
                   onClick={() => {
                     if (imgRef.current) {
                       imgRef.current.click();
@@ -175,6 +196,7 @@ export default function EditBlogs() {
                 </div>
               )
             }
+
           </div>
           <button
             disabled={isDisabled}
@@ -188,7 +210,7 @@ export default function EditBlogs() {
         </div>
       </div>
       <Editor
-       max={620}
+        max={620}
         initialValue={editorContent}
         onChange={handleContentChange}
       />
